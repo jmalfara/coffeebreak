@@ -1,0 +1,36 @@
+{
+  "name": "Jump",
+  "world": "jump",
+  "thumbnail": "https://picsum.photos/200/300",
+  "bounds": {
+    "width": 100,
+    "height": 100
+  },
+  "player": {
+    "type": "circle",
+    "location": {
+      "x": 0,
+      "y": 0
+    },
+    "speed": 0.5
+  },
+  "objects": [
+    {
+      "location": {
+        "x": 5,
+        "y": 5
+      },
+      "type": "circle",
+      "color": "#ABC",
+      "deadly": true
+    },
+    {
+      "location": {
+        "x": 6,
+        "y": 5
+      },
+      "type": "square",
+      "color": "#ABC"
+    }
+  ]
+}
