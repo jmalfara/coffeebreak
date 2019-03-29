@@ -1,6 +1,6 @@
 {
-  "name": "Jump",
-  "world": "jump",
+  "name": "Maze",
+  "world": "maze",
   "thumbnail": "https://picsum.photos/200/300",
   "bounds": {
     "width": 100,
