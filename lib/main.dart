@@ -12,19 +12,29 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Coffeebreak',
-      home:Scaffold(
-        appBar: AppBar(
-          title: Text('Flutter Demo Home Page')
+      home: Container(
+        decoration: BoxDecoration(
+          // Box decoration takes a gradient
+          gradient: LinearGradient(
+            // Where the linear gradient begins and ends
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            // // Add one stop for each color. Stops should increase from 0 to 1
+            stops: [0.0, 1.0],
+            colors: [
+              // Colors are easy thanks to Flutter's Colors class.
+              Colors.indigo[800],
+              Colors.indigo[300]
+            ],
+          ),
         ),
-        body: LoginBody(),
+        child: LoginBody()
       )
     );
   }
 }
 
 class LoginBody extends StatefulWidget {
-  LoginBody({Key key}) : super(key: key);
-
   @override
   _LoginBodyState createState() => _LoginBodyState();
 }
@@ -32,37 +42,34 @@ class LoginBody extends StatefulWidget {
 class _LoginBodyState extends State<LoginBody> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  List<Widget> _widgets = <Widget> [ CircularProgressIndicator() ];
+  bool isLoading;
 
   @override
   void initState() {
     super.initState();
-
-    _auth.currentUser().then((user) {
-      if (user == null) {
-        setState(() {
-          _widgets = renderLoginOptions();
-        });
-      } else {
-        print("Already Logged in");
-        print(user);
-        // Navigate to the next screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => GameDetailsRoute()),
-        );
-      }
-    });
+    isLoading = false;
+    checkUserLoginStatusAndNavigate();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _widgets
-        ),
+    List<Widget> screenWidgets = <Widget>[
+      // TODO Figure out why this is red with a underline
+      Padding (
+        padding: EdgeInsets.only(bottom: 32),
+        child: Text("Coffeebreak")
+      )
+    ];
+
+    if (isLoading) {
+      screenWidgets.addAll(renderLoadingIndicator());
+    } else {
+      screenWidgets.addAll(renderLoginOptions());
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: screenWidgets
     );
   }
 
@@ -91,11 +98,30 @@ class _LoginBodyState extends State<LoginBody> {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+    
+    setState(() {
+     isLoading = true; 
+    });
 
-    print(credential);
+    await _auth.signInWithCredential(credential);
+    checkUserLoginStatusAndNavigate();
+  }
 
-    final FirebaseUser user = await _auth.signInWithCredential(credential);
-
-    print(user);
+  void checkUserLoginStatusAndNavigate() {
+    _auth.currentUser().then((user) {
+      if (user == null) {
+        setState(() {
+          isLoading = false; 
+        });
+      } else {
+        print("Already Logged in");
+        print(user);
+        // Navigate to the next screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => GameDetailsRoute()),
+        );
+      }
+    });
   }
 }
