@@ -1,5 +1,11 @@
 
 import 'dart:convert';
+import 'package:coffeebreak/components/gamedetails/play.dart';
+import 'package:coffeebreak/components/gamedetails/profile.dart';
+import 'package:coffeebreak/components/gamedetails/wallet.dart';
+import 'package:coffeebreak/cosmetic/background.dart';
+import 'package:coffeebreak/cosmetic/text/white_subtitle.dart';
+import 'package:coffeebreak/cosmetic/text/white_title.dart';
 import 'package:intl/intl.dart';
 
 import 'package:coffeebreak/dto/NextGame.dart';
@@ -17,6 +23,7 @@ class GameDetailsState extends State<GameDetailsRoute> {
   bool isLoading;
   int statusCode;
   NextGame nextGame;
+  int currentTabIndex;
 
   @override
   void initState() {
@@ -25,122 +32,30 @@ class GameDetailsState extends State<GameDetailsRoute> {
     isLoading = true;
     statusCode = 0;
     nextGame = null;
+    currentTabIndex = 0;
     _fetchNextGame();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Fetch Data JSON")
-      ),
-      body: Center(
-        child: renderBody()
-      ),
-    );
-  }
-
-  renderBody() {
-    if (isLoading) {
-      return CircularProgressIndicator();
-    }
-
-    if (statusCode == 200 && nextGame != null) {
-      return renderUpcomingGame();
-    } else if (statusCode == 404) {
-      return renderGameNotFound();
-    } else if (statusCode == 500) {
-      return renderError();
-    }
-
-    return Container();
-  }
-
-  renderUpcomingGame() {
-    // String time = "From: "+nextGame.timeBegin+" to "+nextGame.timeEnd;
-    String prizePool = "Prize Pool: \$"+nextGame.prizePool.toString();
-    String timeBegin = DateFormat('MMM d hh:mm a').format(nextGame.timeBegin);
-    String timeEnd = DateFormat('hh:mm a').format(nextGame.timeEnd);
-    String time = "From $timeBegin to $timeEnd";
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          nextGame.title,
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+    return Container(
+      decoration: Background.decoration(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: _getCurrentTab(currentTabIndex)
         ),
-        Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: Text(prizePool)
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: Image.network(
-            nextGame.thumbnailUrl,
-            fit: BoxFit.contain,
-            width: 300,
-            height: 300,
-          )
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: Text(time)
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: RaisedButton(
-            child: Icon(Icons.play_arrow),
-            onPressed: () {_fetchNextGame();},
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.play_arrow), title: Text('Play')),
+            BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), title: Text('Wallet')),
+            BottomNavigationBarItem(icon: Icon(Icons.account_box), title: Text('Account')),
+          ],
+          currentIndex: 0,
+          fixedColor: Colors.deepPurple,
+          onTap: _onBottomBarItemTapped,
         )
-      ],
-    );
-  }
-
-  renderGameNotFound() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "There are no upcoming games currently planned",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: Text("Please check back in later."),
-        ),
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () {_fetchNextGame();},
-          ),
-        )
-      ],
-    );
-  }
-
-  renderError() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Center(
-          child: Text(
-              "Something went wrong. Please try again later.",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            )
-        ),
-        Center( 
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {_fetchNextGame();},
-            ),
-          )
-        )
-      ],
+      )
     );
   }
 
@@ -170,5 +85,23 @@ class GameDetailsState extends State<GameDetailsRoute> {
       nextGame = _nextGame;
       statusCode = _statusCode;
     });
+  }
+
+  void _onBottomBarItemTapped(int index) {
+    setState(() {
+     currentTabIndex = index; 
+    });
+  }
+
+  _getCurrentTab(int index) {
+    Widget _selectedTab;
+    if (index == 0) {
+      _selectedTab = PlayWidget(isLoading: isLoading, nextGame: nextGame, statusCode: statusCode, requestFetchNextGame: _fetchNextGame);
+    } else if (index == 1) {
+      _selectedTab = WalletWidget();
+    } else if (index == 2) {
+      _selectedTab = ProfileWidget();
+    }
+    return _selectedTab;
   }
 }

@@ -1,3 +1,5 @@
+import 'package:coffeebreak/cosmetic/background.dart';
+import 'package:coffeebreak/cosmetic/text/white_title.dart';
 import 'package:coffeebreak/game_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,24 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Coffeebreak',
-      home: Container(
-        decoration: BoxDecoration(
-          // Box decoration takes a gradient
-          gradient: LinearGradient(
-            // Where the linear gradient begins and ends
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            // // Add one stop for each color. Stops should increase from 0 to 1
-            stops: [0.0, 1.0],
-            colors: [
-              // Colors are easy thanks to Flutter's Colors class.
-              Colors.indigo[800],
-              Colors.indigo[300]
-            ],
-          ),
-        ),
-        child: LoginBody()
-      )
+      home: LoginBody()
     );
   }
 }
@@ -54,10 +39,9 @@ class _LoginBodyState extends State<LoginBody> {
   @override
   Widget build(BuildContext context) {
     List<Widget> screenWidgets = <Widget>[
-      // TODO Figure out why this is red with a underline
       Padding (
         padding: EdgeInsets.only(bottom: 32),
-        child: Text("Coffeebreak")
+        child: WhiteTitleText("Coffeebreak")
       )
     ];
 
@@ -67,9 +51,17 @@ class _LoginBodyState extends State<LoginBody> {
       screenWidgets.addAll(renderLoginOptions());
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: screenWidgets
+    return Container(
+      decoration: Background.decoration(),
+      child: Scaffold (
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: Column (
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: screenWidgets
+          )
+        )
+      )
     );
   }
 
