@@ -4,11 +4,10 @@ import 'package:coffeebreak/components/gamedetails/play.dart';
 import 'package:coffeebreak/components/gamedetails/profile.dart';
 import 'package:coffeebreak/components/gamedetails/wallet.dart';
 import 'package:coffeebreak/cosmetic/background.dart';
-import 'package:coffeebreak/cosmetic/text/white_subtitle.dart';
-import 'package:coffeebreak/cosmetic/text/white_title.dart';
-import 'package:intl/intl.dart';
 
 import 'package:coffeebreak/dto/NextGame.dart';
+import 'package:coffeebreak/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,9 +20,12 @@ class GameDetailsRoute extends StatefulWidget {
 
 class GameDetailsState extends State<GameDetailsRoute> {
   bool isLoading;
+  bool isLoadingUser;
   int statusCode;
   NextGame nextGame;
   int currentTabIndex;
+  FirebaseUser user;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class GameDetailsState extends State<GameDetailsRoute> {
     nextGame = null;
     currentTabIndex = 0;
     _fetchNextGame();
+    _fetchCurrentFirebaseUser();
   }
 
   @override
@@ -57,6 +60,34 @@ class GameDetailsState extends State<GameDetailsRoute> {
         )
       )
     );
+  }
+
+  void _onBottomBarItemTapped(int index) {
+    setState(() {
+     currentTabIndex = index; 
+    });
+  }
+
+  _getCurrentTab(int index) {
+    Widget _selectedTab;
+    if (index == 0) {
+      _selectedTab = PlayWidget(
+          isLoading: this.isLoading, 
+          nextGame: this.nextGame, 
+          statusCode: this.statusCode, 
+          requestFetchNextGame: this._fetchNextGame
+        );
+    } else if (index == 1) {
+      _selectedTab = WalletWidget();
+    } else if (index == 2) {
+      _selectedTab = ProfileWidget(
+          isLoading: this.isLoadingUser,
+          user: this.user,
+          onLogout: this._logoutUser,
+          onRefreshUser: this._fetchCurrentFirebaseUser,
+        );
+    }
+    return _selectedTab;
   }
 
   _fetchNextGame() async {
@@ -87,21 +118,24 @@ class GameDetailsState extends State<GameDetailsRoute> {
     });
   }
 
-  void _onBottomBarItemTapped(int index) {
+  _fetchCurrentFirebaseUser() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
     setState(() {
-     currentTabIndex = index; 
+      isLoadingUser = true;
+    });
+
+    FirebaseUser _user = await _auth.currentUser();
+
+    setState(() {
+     isLoadingUser = false;
+     user = _user; 
     });
   }
 
-  _getCurrentTab(int index) {
-    Widget _selectedTab;
-    if (index == 0) {
-      _selectedTab = PlayWidget(isLoading: isLoading, nextGame: nextGame, statusCode: statusCode, requestFetchNextGame: _fetchNextGame);
-    } else if (index == 1) {
-      _selectedTab = WalletWidget();
-    } else if (index == 2) {
-      _selectedTab = ProfileWidget();
-    }
-    return _selectedTab;
+  _logoutUser() {
+    _auth.signOut();
+    
+    // Navigate to the next screen
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginBody()));
   }
 }

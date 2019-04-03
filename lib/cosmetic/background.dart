@@ -19,4 +19,10 @@ class Background {
       ),
     );
   }
+
+  static BoxDecoration headerDecoration() {
+    return BoxDecoration (
+      color: Colors.indigo[800]
+    );
+  }
 }

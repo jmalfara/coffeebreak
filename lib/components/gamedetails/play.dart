@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PlayWidget extends StatelessWidget {
-  bool isLoading;
-  int statusCode;
-  NextGame nextGame;
+  final bool isLoading;
+  final int statusCode;
+  final NextGame nextGame;
+  final Function requestFetchNextGame;
 
-  Function requestFetchNextGame;
-
-  PlayWidget({this.isLoading, this.statusCode, this.nextGame, this.requestFetchNextGame});
+  PlayWidget({Key key, this.isLoading, this.statusCode, this.nextGame, this.requestFetchNextGame}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +34,7 @@ class PlayWidget extends StatelessWidget {
   }
 
   renderUpcomingGame() {
+    final double imageDimension = 300;
     // String time = "From: "+nextGame.timeBegin+" to "+nextGame.timeEnd;
     String prizePool = "Prize Pool: \$"+nextGame.prizePool.toString();
     String timeBegin = DateFormat('MMM d hh:mm a').format(nextGame.timeBegin);
@@ -51,25 +51,33 @@ class PlayWidget extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(top: 16),
-          child: Image.network(
-            nextGame.thumbnailUrl,
-            fit: BoxFit.contain,
-            width: 300,
-            height: 300,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: imageDimension,
+                height: imageDimension,
+                decoration: BoxDecoration(color: Colors.grey),
+              ),
+              Image.network(
+                nextGame.thumbnailUrl,
+                fit: BoxFit.contain,
+                width: imageDimension,
+                height: imageDimension,
+              ),
+              RaisedButton(
+                shape: CircleBorder(),
+                color: Colors.grey[400].withAlpha(180),
+                padding: EdgeInsets.all(16),
+                child: Icon(Icons.play_arrow, size: 40),
+                onPressed: requestFetchNextGame,
+              ),
+            ],
           )
         ),
         Padding(
           padding: EdgeInsets.only(top: 16),
           child: WhiteSubtitleText(time)
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: RaisedButton(
-            shape: CircleBorder(),
-            padding: EdgeInsets.all(16),
-            child: Icon(Icons.play_arrow),
-            onPressed: requestFetchNextGame,
-          ),
         )
       ],
     );
