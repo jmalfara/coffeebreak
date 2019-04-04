@@ -1,23 +1,41 @@
+import 'dart:convert';
 import 'package:coffeebreak/cosmetic/text/white_subtitle.dart';
 import 'package:coffeebreak/cosmetic/text/white_title.dart';
 import 'package:coffeebreak/dto/NextGame.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PlayWidget extends StatelessWidget {
-  final bool isLoading;
-  final int statusCode;
-  final NextGame nextGame;
-  final Function requestFetchNextGame;
+import 'package:http/http.dart' as http;
 
-  PlayWidget({Key key, this.isLoading, this.statusCode, this.nextGame, this.requestFetchNextGame}) : super(key: key);
+const String GAME_DETAILS_URL = "https://us-central1-coffeebreak-36ca9.cloudfunctions.net/upcoming";
+
+class PlayWidget extends StatefulWidget {
+
+  const PlayWidget({ Key key }) : super(key: key);
+
+  @override
+  _PlayWidgetState createState() => _PlayWidgetState();
+}
+
+class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMixin {
+  bool isLoading;
+  int statusCode;
+  NextGame nextGame;
+  
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    statusCode = 404;
+    nextGame = null;
+    _fetchNextGame();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return renderBody();
-  }
-
-  renderBody() {
     if (isLoading) {
       return CircularProgressIndicator();
     }
@@ -44,10 +62,10 @@ class PlayWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        WhiteTitleText(nextGame.title),
+        WhiteTitleText(text: nextGame.title),
         Padding(
           padding: EdgeInsets.only(top: 16),
-          child: WhiteSubtitleText(prizePool)
+          child: WhiteSubtitleText(text: prizePool)
         ),
         Padding(
           padding: EdgeInsets.only(top: 16),
@@ -70,14 +88,14 @@ class PlayWidget extends StatelessWidget {
                 color: Colors.grey[400].withAlpha(180),
                 padding: EdgeInsets.all(16),
                 child: Icon(Icons.play_arrow, size: 40),
-                onPressed: requestFetchNextGame,
+                onPressed: _fetchNextGame,
               ),
             ],
           )
         ),
         Padding(
           padding: EdgeInsets.only(top: 16),
-          child: WhiteSubtitleText(time)
+          child: WhiteSubtitleText(text: time)
         )
       ],
     );
@@ -99,7 +117,7 @@ class PlayWidget extends StatelessWidget {
           padding: EdgeInsets.all(16),
           child: IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: requestFetchNextGame,
+            onPressed: _fetchNextGame,
           ),
         )
       ],
@@ -121,7 +139,7 @@ class PlayWidget extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: IconButton(
               icon: Icon(Icons.refresh),
-              onPressed: requestFetchNextGame,
+              onPressed: _fetchNextGame,
             ),
           )
         )
@@ -129,4 +147,31 @@ class PlayWidget extends StatelessWidget {
     );
   }
 
+  _fetchNextGame() async {
+    setState(() {
+      isLoading = true;
+    });
+    
+    
+    NextGame _nextGame;
+    int _statusCode;
+
+    try {
+      final response = await http.get(GAME_DETAILS_URL);
+      print(response.body);
+      
+      _statusCode = response.statusCode;
+      if (response.statusCode == 200) {
+        _nextGame = NextGame.fromJson(json.decode(response.body));
+      }
+    } catch (e) {
+      _statusCode = 500;
+    }
+
+    setState(() {
+      isLoading = false;
+      nextGame = _nextGame;
+      statusCode = _statusCode;
+    });
+  }
 }

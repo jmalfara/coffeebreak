@@ -1,6 +1,6 @@
 import 'package:coffeebreak/cosmetic/background.dart';
 import 'package:coffeebreak/cosmetic/text/white_title.dart';
-import 'package:coffeebreak/game_details.dart';
+import 'package:coffeebreak/game_details_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -14,17 +14,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Coffeebreak',
-      home: LoginBody()
+      home: LoginScreen()
     );
   }
 }
 
-class LoginBody extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginBodyState createState() => _LoginBodyState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginBodyState extends State<LoginBody> {
+class _LoginScreenState extends State<LoginScreen> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading;
@@ -41,7 +41,7 @@ class _LoginBodyState extends State<LoginBody> {
     List<Widget> screenWidgets = <Widget>[
       Padding (
         padding: EdgeInsets.only(bottom: 32),
-        child: WhiteTitleText("Coffeebreak")
+        child: WhiteTitleText(text: "Coffeebreak")
       )
     ];
 
@@ -111,7 +111,7 @@ class _LoginBodyState extends State<LoginBody> {
         // Navigate to the next screen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => GameDetailsRoute()),
+          MaterialPageRoute(builder: (context) => GameDetailsScreen()),
         );
       }
     });

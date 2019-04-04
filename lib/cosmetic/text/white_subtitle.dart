@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class WhiteSubtitleText extends StatelessWidget {
-  String text;
+  final String text;
 
-  WhiteSubtitleText(String text) {
-    this.text = text;
-  }
+  WhiteSubtitleText({this.text});
 
   @override
   Widget build(BuildContext context) {

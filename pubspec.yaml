@@ -27,6 +27,7 @@ dependencies:
 
   firebase_core: ^0.3.1  # add dependency for Firebase Core
   firebase_auth: ^0.8.2
+  firebase_storage: ^2.1.0+1
 
   # UI Helper Dependencies
   flutter_signin_button: ^0.2.8

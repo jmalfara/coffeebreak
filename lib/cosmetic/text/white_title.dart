@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class WhiteTitleText extends StatelessWidget {
-  String text;
+  final String text;
 
-  WhiteTitleText(String text) {
-    this.text = text;
-  }
+  WhiteTitleText({this.text});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Text(
       text,
       style: TextStyle(

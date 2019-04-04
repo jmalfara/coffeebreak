@@ -1,16 +1,31 @@
 import 'package:coffeebreak/components/gamedetails/profile/update_email.dart';
 import 'package:coffeebreak/cosmetic/text/white_subtitle.dart';
+import 'package:coffeebreak/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class ProfileWidget extends StatelessWidget {
-  final FirebaseUser user;
-  final bool isLoading;
-  final Function onLogout;
-  final Function onRefreshUser;
+class ProfileWidget extends StatefulWidget {
 
-  const ProfileWidget({Key key, this.user, this.isLoading, this.onLogout, this.onRefreshUser});
+  const ProfileWidget({ Key key }) : super(key: key);
+
+  @override
+  _ProfileWidgetState createState() => _ProfileWidgetState();
+}
+
+class _ProfileWidgetState extends State<ProfileWidget> with AutomaticKeepAliveClientMixin {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isLoading = false;
+  FirebaseUser user;
+  
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCurrentFirebaseUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +41,7 @@ class ProfileWidget extends StatelessWidget {
           renderRoundImage(),
           renderDisplayName(),
           renderLoggoutChip(),
-          UpdateEmailWidget(onRefreshUser: onRefreshUser, onLogout: onLogout, user: user)
+          UpdateEmailWidget(onRefreshUser: _fetchCurrentFirebaseUser, onLogout: _logoutUser, user: user)
         ]
       )
     );
@@ -55,7 +70,7 @@ class ProfileWidget extends StatelessWidget {
   Widget renderDisplayName() {
     return Padding(
       padding: EdgeInsets.all(16), 
-      child: WhiteSubtitleText(user.displayName)
+      child: WhiteSubtitleText(text: user.displayName)
     );
   }
 
@@ -71,10 +86,32 @@ class ProfileWidget extends StatelessWidget {
               child: Icon(Icons.keyboard_return),
             ),
             label: Text('Logout'),
-            onPressed: onLogout,
+            onPressed: _logoutUser,
           )
         ],
       )
     );
+  }
+
+  _fetchCurrentFirebaseUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    FirebaseUser _user = await _auth.currentUser();
+
+    setState(() {
+     isLoading = false;
+     user = _user; 
+    });
+
+    print("Loaded User");
+  }
+
+  _logoutUser() {
+    _auth.signOut();
+    
+    // Navigate to the next screen
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }
