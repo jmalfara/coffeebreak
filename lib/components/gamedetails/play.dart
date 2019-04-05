@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:coffeebreak/cosmetic/text/white_subtitle.dart';
 import 'package:coffeebreak/cosmetic/text/white_title.dart';
 import 'package:coffeebreak/dto/NextGame.dart';
+import 'package:coffeebreak/dto/maze_game.dart';
+import 'package:coffeebreak/dto/player.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -37,7 +39,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return CircularProgressIndicator();
+      return renderLoading();
     }
 
     if (statusCode == 200 && nextGame != null) {
@@ -88,7 +90,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
                 color: Colors.grey[400].withAlpha(180),
                 padding: EdgeInsets.all(16),
                 child: Icon(Icons.play_arrow, size: 40),
-                onPressed: _fetchNextGame,
+                onPressed: _downlaodGame,
               ),
             ],
           )
@@ -117,7 +119,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
           padding: EdgeInsets.all(16),
           child: IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: _fetchNextGame,
+            onPressed: _downlaodGame,
           ),
         )
       ],
@@ -147,6 +149,15 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
     );
   }
 
+  renderLoading() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        CircularProgressIndicator()
+      ]
+    );
+  }
+
   _fetchNextGame() async {
     setState(() {
       isLoading = true;
@@ -173,5 +184,14 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
       nextGame = _nextGame;
       statusCode = _statusCode;
     });
+  }
+
+  _downlaodGame() async {
+    // Download game
+    String data = await DefaultAssetBundle.of(context).loadString("assets/game.json");
+    final jsonResult = json.decode(data);
+    MazeGame gameObject = MazeGame.fromJson(jsonResult);
+    print("Decoded");
+    print(gameObject);
   }
 }

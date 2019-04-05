@@ -21,8 +21,8 @@ class GameDetailsState extends State<GameDetailsScreen> {
           backgroundColor: Colors.transparent,
           body: TabBarView(
             children: [ 
-              PlayWidget(key: PageStorageKey(0)),
-              ProfileWidget(key: PageStorageKey(1))
+              PlayWidget(),
+              ProfileWidget()
             ],
           ),
           bottomNavigationBar: TabBar(
