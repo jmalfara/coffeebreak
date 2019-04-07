@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:math';
 
+/*
+ * The observable class used to define a player.
+ */
 class Player {
   /*
   "player": {
@@ -11,12 +15,22 @@ class Player {
   },
   */
   final PlayerType type;
-  final Point location;
 
+  // Observable location
+  final StreamController<Point> _locationStreamController = StreamController<Point>();
+  Stream<Point> get location => _locationStreamController.stream;
+  void dispose() => _locationStreamController.close();
+  
   Player._({
     this.type,
-    this.location
-  });
+    Point location
+  }) {
+    setLocation(location);
+  }
+
+  setLocation(Point location) {
+    _locationStreamController.add(location);
+  }
 
   factory Player.fromJson(Map<String, dynamic> json) {
     return new Player._(

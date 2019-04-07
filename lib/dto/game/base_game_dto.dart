@@ -1,22 +1,24 @@
 import 'dart:ui';
 
-import 'package:coffeebreak/dto/player.dart';
+import 'package:coffeebreak/dto/player_dto.dart';
 
-class MazeGame {
+class BaseGameDto {
   final Player player;
   final Rect bounds;
+  final String type;
 
-  MazeGame._({
+  BaseGameDto._({
+    this.type,
     this.bounds,
     this.player,
   });
 
-  factory MazeGame.fromJson(Map<String, dynamic> json) {
-    print(json);
+  factory BaseGameDto.fromJson(Map<String, dynamic> json) {
     double boundHeight = json["bounds"]["height"];
     double boundWidth = json["bounds"]["width"];
     
-    return new MazeGame._(
+    return new BaseGameDto._(
+      type: json["type"],
       bounds: Rect.fromLTRB(0, 0, boundWidth, boundHeight),
       player: Player.fromJson(json["player"])
     );

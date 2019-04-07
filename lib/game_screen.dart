@@ -1,21 +1,84 @@
-import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
+import 'dart:math';
 
-class GameScreen extends StatelessWidget {
+import 'package:coffeebreak/cosmetic/background.dart';
+import 'package:coffeebreak/dto/game/base_game_dto.dart';
+import 'package:coffeebreak/game/game.dart';
+import 'package:coffeebreak/game/game_wrapper.dart';
+import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+class GameScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Text("KK"),
-    );
-  }
+  State<StatefulWidget> createState() => new GameScreenState();
 }
 
-class GameWrapper extends StatelessWidget {
-  final Game game;
-  GameWrapper(this.game);
+class GameScreenState extends State<GameScreen> {
+  bool isLoading;
+  BaseGameDto gameDto;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    _downloadGame();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return game.widget;
+    if (isLoading) {
+      return renderLoading();
+    }
+
+    return Container(
+      decoration: Background.decoration(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: GameWrapper(
+            game: Game(gameDto)
+          )
+        )
+      )
+    );
+  }
+
+  renderLoading() {
+    return Container(
+      decoration: Background.decoration(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircularProgressIndicator()
+            ]
+          ),
+        )
+      )
+    );
+  }
+
+  _downloadGame() async {
+    // Download game
+    setState(() {
+     isLoading = true; 
+    });
+
+    BaseGameDto _game;
+    try {
+      String data = await DefaultAssetBundle.of(context).loadString("assets/game.json");
+      final jsonResult = json.decode(data);
+      _game = BaseGameDto.fromJson(jsonResult["base"]);
+    } catch (e) {
+      print(e);
+    }
+
+    setState(() {
+     isLoading = false; 
+     gameDto = _game;
+    });
   }
 }

@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:coffeebreak/cosmetic/text/white_subtitle.dart';
 import 'package:coffeebreak/cosmetic/text/white_title.dart';
-import 'package:coffeebreak/dto/NextGame.dart';
-import 'package:coffeebreak/dto/maze_game.dart';
-import 'package:coffeebreak/dto/player.dart';
+import 'package:coffeebreak/dto/next_game.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,8 +10,9 @@ import 'package:http/http.dart' as http;
 const String GAME_DETAILS_URL = "https://us-central1-coffeebreak-36ca9.cloudfunctions.net/upcoming";
 
 class PlayWidget extends StatefulWidget {
+  final Function onNavigateToGameScreen;
 
-  const PlayWidget({ Key key }) : super(key: key);
+  const PlayWidget({ Key key, this.onNavigateToGameScreen }) : super(key: key);
 
   @override
   _PlayWidgetState createState() => _PlayWidgetState();
@@ -23,7 +22,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
   bool isLoading;
   int statusCode;
   NextGame nextGame;
-  
+
   @override
   bool get wantKeepAlive => true;
 
@@ -90,7 +89,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
                 color: Colors.grey[400].withAlpha(180),
                 padding: EdgeInsets.all(16),
                 child: Icon(Icons.play_arrow, size: 40),
-                onPressed: _downlaodGame,
+                onPressed: () => widget.onNavigateToGameScreen(),
               ),
             ],
           )
@@ -119,7 +118,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
           padding: EdgeInsets.all(16),
           child: IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: _downlaodGame,
+            onPressed: _fetchNextGame,
           ),
         )
       ],
@@ -184,14 +183,5 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
       nextGame = _nextGame;
       statusCode = _statusCode;
     });
-  }
-
-  _downlaodGame() async {
-    // Download game
-    String data = await DefaultAssetBundle.of(context).loadString("assets/game.json");
-    final jsonResult = json.decode(data);
-    MazeGame gameObject = MazeGame.fromJson(jsonResult);
-    print("Decoded");
-    print(gameObject);
   }
 }

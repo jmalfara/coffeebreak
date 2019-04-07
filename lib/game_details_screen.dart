@@ -2,6 +2,7 @@
 import 'package:coffeebreak/components/gamedetails/play.dart';
 import 'package:coffeebreak/components/gamedetails/profile.dart';
 import 'package:coffeebreak/cosmetic/background.dart';
+import 'package:coffeebreak/game_screen.dart';
 
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,9 @@ class GameDetailsState extends State<GameDetailsScreen> {
           backgroundColor: Colors.transparent,
           body: TabBarView(
             children: [ 
-              PlayWidget(),
+              PlayWidget(
+                onNavigateToGameScreen: _navigateToPlayScreen,
+              ),
               ProfileWidget()
             ],
           ),
@@ -33,6 +36,13 @@ class GameDetailsState extends State<GameDetailsScreen> {
           ),
         )
       )
+    );
+  }
+
+  _navigateToPlayScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GameScreen()),
     );
   }
 }
