@@ -1,13 +1,9 @@
-import 'dart:math';
-
+import 'package:coffeebreak/components/game/maze_game.dart';
 import 'package:coffeebreak/cosmetic/background.dart';
 import 'package:coffeebreak/dto/game/base_game_dto.dart';
-import 'package:coffeebreak/game/game.dart';
-import 'package:coffeebreak/game/game_wrapper.dart';
+import 'package:coffeebreak/dto/game/maze_game_dto.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-
-import 'package:http/http.dart' as http;
 
 class GameScreen extends StatefulWidget {
   @override
@@ -16,7 +12,7 @@ class GameScreen extends StatefulWidget {
 
 class GameScreenState extends State<GameScreen> {
   bool isLoading;
-  BaseGameDto gameDto;
+  MazeGameDto gameDto;
 
   @override
   void initState() {
@@ -36,9 +32,7 @@ class GameScreenState extends State<GameScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: GameWrapper(
-            game: Game(gameDto)
-          )
+          child: renderGame()
         )
       )
     );
@@ -61,21 +55,30 @@ class GameScreenState extends State<GameScreen> {
     );
   }
 
+  renderGame() {
+    // TODO implement other game widgets
+    return MazeGame(
+      gameDto: gameDto,
+    );
+  }
+
   _downloadGame() async {
     // Download game
     setState(() {
      isLoading = true; 
     });
 
-    BaseGameDto _game;
+    MazeGameDto _game;
     try {
+      // TODO Create network download.
       String data = await DefaultAssetBundle.of(context).loadString("assets/game.json");
       final jsonResult = json.decode(data);
-      _game = BaseGameDto.fromJson(jsonResult["base"]);
+      _game = MazeGameDto.fromJson(jsonResult);
     } catch (e) {
       print(e);
     }
 
+    print(_game);
     setState(() {
      isLoading = false; 
      gameDto = _game;

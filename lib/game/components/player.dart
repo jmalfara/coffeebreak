@@ -23,7 +23,7 @@ class PlayerComponent extends BodyComponent {
 
     final activeFixtureDef = new FixtureDef();
     activeFixtureDef.shape = circle;
-    activeFixtureDef.restitution = 0.0;
+    activeFixtureDef.restitution = 1;
     activeFixtureDef.density = 0.05;
     activeFixtureDef.friction = 0.0;
     FixtureDef fixtureDef = activeFixtureDef;

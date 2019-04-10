@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:coffeebreak/dto/game/base_game_dto.dart';
 
 class MazeGameDto {
