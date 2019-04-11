@@ -19,7 +19,7 @@ class PlayerComponent extends BodyComponent {
     print("Create body");
     // Define a shape
     CircleShape circle = new CircleShape();
-    circle.radius = 5;
+    circle.radius = 2;
 
     final activeFixtureDef = new FixtureDef();
     activeFixtureDef.shape = circle;

@@ -21,7 +21,7 @@ class MazeWorld extends Box2DComponent {
   }
 
   void movePlayer(Vector2 force) {
-    force.multiply(new Vector2(30, 30));
+    force.multiply(new Vector2(50, 50));
     player.body.linearVelocity = force;
   }
 

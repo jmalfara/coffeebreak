@@ -3,24 +3,57 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:vector_math/vector_math_64.dart' as Vector;
 
+class DigitalJoystick extends StatelessWidget {
+  final Function onChange;
+
+  const DigitalJoystick({Key key, this.onChange}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double deadZone = 0.05;
+
+    return Joystick(
+      onChanged: (Vector.Vector2 vector) {
+        if (vector.x.abs() <= deadZone) {
+          // Don't increase X
+          vector.x = 0;
+        }
+
+        if (vector.y.abs() <= deadZone) {
+          // Don't increase Y
+          vector.y = 0;
+        }
+
+        if (vector.distanceTo(new Vector.Vector2(0, 0)) > 0) {
+          double scaleValue = 1 / vector.distanceTo(new Vector.Vector2(0, 0));
+          vector.scale(scaleValue);
+          onChange(vector);
+        } else {
+          onChange(new Vector.Vector2(0, 0));
+        }
+      },
+    );
+  }
+
+}
+
 /**
  * Steteful widget
  */
-class TouchPad extends StatefulWidget {
-
+class Joystick extends StatefulWidget {
   final Function onChanged;
 
-  const TouchPad({Key key, this.onChanged}) : super(key: key);
+  const Joystick({Key key, this.onChanged}) : super(key: key);
 
   @override
-  TouchPadState createState() => new TouchPadState();
+  JoystickState createState() => new JoystickState();
 }
 
 /**
  * Draws a circle at supplied position.
  *
  */
-class TouchPadState extends State<TouchPad> {
+class JoystickState extends State<Joystick> {
   final double width = 150;
   final double height = 150;
 

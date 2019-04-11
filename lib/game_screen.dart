@@ -56,7 +56,6 @@ class GameScreenState extends State<GameScreen> {
   }
 
   renderGame() {
-    // TODO implement other game widgets
     return MazeGame(
       gameDto: gameDto,
     );
