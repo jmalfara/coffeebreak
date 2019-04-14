@@ -5,7 +5,6 @@ class Game extends BaseGame {
   final Box2DComponent gameWorld;
 
   Game({this.gameWorld}) {
-    print("Create World");
     gameWorld.initializeWorld();
     add(gameWorld);
   }

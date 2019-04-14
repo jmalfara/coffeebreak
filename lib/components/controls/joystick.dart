@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:vector_math/vector_math_64.dart' as Vector;
 
+// Digital version of the Joystick. On or Off
 class DigitalJoystick extends StatelessWidget {
   final Function onChange;
 
@@ -37,9 +38,7 @@ class DigitalJoystick extends StatelessWidget {
 
 }
 
-/**
- * Steteful widget
- */
+// Steteful widget
 class Joystick extends StatefulWidget {
   final Function onChanged;
 
@@ -49,10 +48,7 @@ class Joystick extends StatefulWidget {
   JoystickState createState() => new JoystickState();
 }
 
-/**
- * Draws a circle at supplied position.
- *
- */
+// Draws a circle at supplied position.
 class JoystickState extends State<Joystick> {
   final double width = 150;
   final double height = 150;
@@ -136,10 +132,7 @@ class JoystickState extends State<Joystick> {
   }
 }
 
-/**
- * Painter.
- *
- */
+// Painter.
 class TouchPadPainter extends CustomPainter {
   static const markerRadius = 10.0;
 
@@ -163,10 +156,7 @@ class TouchPadPainter extends CustomPainter {
   bool shouldRepaint(TouchPadPainter old) => position.dx != old.position.dx && position.dy !=old.position.dy;
 }
 
-/**
- * Grid Painter.
- *
- */
+// Grid Painter.
 class TouchPadGridPainter extends CustomPainter {
 
   Offset position;

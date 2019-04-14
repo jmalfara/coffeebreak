@@ -1,6 +1,5 @@
-import 'package:coffeebreak/components/game/maze_game.dart';
+import 'package:coffeebreak/components/maze/maze_game.dart';
 import 'package:coffeebreak/cosmetic/background.dart';
-import 'package:coffeebreak/dto/game/base_game_dto.dart';
 import 'package:coffeebreak/dto/game/maze_game_dto.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';

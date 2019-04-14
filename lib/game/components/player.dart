@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/painting.dart';
 
 class PlayerComponent extends BodyComponent {
+  double _size = 5;
+
   PlayerComponent(Box2DComponent box) : super(box) {
     _createBody();
   }
@@ -16,23 +18,16 @@ class PlayerComponent extends BodyComponent {
   }
 
   _createBody() {
-    print("Create body");
-    // Define a shape
-    CircleShape circle = new CircleShape();
-    circle.radius = 2;
+    CircleShape shape = new CircleShape();
+    shape.radius = _size;
 
     final activeFixtureDef = new FixtureDef();
-    activeFixtureDef.shape = circle;
-    activeFixtureDef.restitution = 1;
-    activeFixtureDef.density = 0.05;
-    activeFixtureDef.friction = 0.0;
+    activeFixtureDef.shape = shape;
     FixtureDef fixtureDef = activeFixtureDef;
 
     final activeBodyDef = new BodyDef();
-    activeBodyDef.linearVelocity = new Vector2(0.0, 0.0);
-    activeBodyDef.position = new Vector2(0.0, 15.0);
     activeBodyDef.type = BodyType.DYNAMIC;
-    activeBodyDef.bullet = true;
+    activeBodyDef.setUserData("Player");
     BodyDef bodyDef = activeBodyDef;
 
     this.body = world.createBody(bodyDef)
