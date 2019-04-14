@@ -1,23 +1,27 @@
 import 'package:box2d_flame/box2d.dart';
 import 'package:coffeebreak/dto/game/maze_game_dto.dart';
-import 'package:coffeebreak/game/components/grid.dart';
+import 'package:coffeebreak/game/components/enemy.dart';
 import 'package:coffeebreak/game/components/player.dart';
+import 'package:coffeebreak/game/grid.dart';
 import 'package:coffeebreak/game/simple_contact_listener.dart';
 import 'package:flame/box2d/box2d_component.dart';
 
 class MazeWorld extends Box2DComponent {
   MazeGameDto gameDto;
   PlayerComponent player;
+  Enemy enemy;
   Grid grid;
 
   MazeWorld({this.gameDto}) : super(scale: 1.0) {
     player = new PlayerComponent(this);
+    enemy = new Enemy(this);
     grid = new Grid(width: viewport.width, height: viewport.height, box2dComponent: this);
     world.setContactListener(new SimpleContactListener());
   }
 
   void initializeWorld() {
     add(player);
+    add(enemy);
     _buildBarriers();
     // world.setGravity(new Vector2(0, 0));
   }
