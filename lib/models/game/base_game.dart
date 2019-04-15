@@ -1,29 +1,29 @@
 import 'dart:ui';
 
-import 'package:coffeebreak/dto/player_dto.dart';
+import 'package:coffeebreak/models/player.dart';
 
-class BaseGameDto {
+class BaseGameModel {
   final double time;
-  final Player player;
+  final PlayerModel player;
   final Rect bounds;
   final String type;
 
-  BaseGameDto._({
+  BaseGameModel._({
     this.time,
     this.type,
     this.bounds,
     this.player,
   });
 
-  factory BaseGameDto.fromJson(Map<String, dynamic> json) {
+  factory BaseGameModel.fromJson(Map<String, dynamic> json) {
     double boundHeight = json["bounds"]["height"];
     double boundWidth = json["bounds"]["width"];
     
-    return new BaseGameDto._(
+    return new BaseGameModel._(
       time: json["time"],
       type: json["type"],
       bounds: Rect.fromLTRB(0, 0, boundWidth, boundHeight),
-      player: Player.fromJson(json["player"])
+      player: PlayerModel.fromJson(json["player"])
     );
   }
 }

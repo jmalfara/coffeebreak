@@ -1,17 +1,17 @@
 import 'dart:ui';
 
 import 'package:box2d_flame/box2d.dart';
-import 'package:coffeebreak/dto/game/maze_game_dto.dart';
 import 'package:coffeebreak/game/components/enemy.dart';
 import 'package:coffeebreak/game/components/player.dart';
 import 'package:coffeebreak/game/components/types.dart';
 import 'package:coffeebreak/game/grid.dart';
 import 'package:coffeebreak/game/simple_contact_listener.dart';
+import 'package:coffeebreak/models/game/maze_game.dart';
 import 'package:flame/box2d/box2d_component.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class MazeWorld extends Box2DComponent {
-  MazeGameDto gameDto;
+  MazeGameModel gameDto;
   Player player;
   Enemy enemy;
   Grid grid;

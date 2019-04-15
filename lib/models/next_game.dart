@@ -1,4 +1,4 @@
-class NextGame {
+class NextGameModel {
 
   final String title;
   final String thumbnailUrl;
@@ -7,7 +7,7 @@ class NextGame {
   final num prizePool;
   final bool isAvailable;
 
-  NextGame._({
+  NextGameModel._({
     this.title,
     this.thumbnailUrl,
     this.timeBegin,
@@ -16,11 +16,11 @@ class NextGame {
     this.isAvailable
   });
 
-  factory NextGame.fromJson(Map<String, dynamic> json) {
+  factory NextGameModel.fromJson(Map<String, dynamic> json) {
     int startTimeSeconds = json['timeBegin']['_seconds'];
     int endTimeSeconds = json['timeEnd']['_seconds'];
 
-    return new NextGame._(
+    return new NextGameModel._(
       title: json['title'],
       thumbnailUrl: json['thumbnailUrl'],
       timeBegin: DateTime.fromMillisecondsSinceEpoch(startTimeSeconds * 1000),

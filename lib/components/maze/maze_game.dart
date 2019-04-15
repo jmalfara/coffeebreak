@@ -1,12 +1,12 @@
 import 'package:coffeebreak/components/controls/joystick.dart';
-import 'package:coffeebreak/dto/game/maze_game_dto.dart';
 import 'package:coffeebreak/game/game.dart';
 import 'package:coffeebreak/game/game_wrapper.dart';
 import 'package:coffeebreak/game/worlds/maze_world.dart';
+import 'package:coffeebreak/models/game/maze_game.dart';
 import 'package:flutter/material.dart';
 
 class MazeGame extends StatefulWidget {
-  final MazeGameDto gameDto;
+  final MazeGameModel gameDto;
 
   MazeGame({Key key, this.gameDto}) : super(key: key);
 

@@ -1,6 +1,6 @@
 import 'package:coffeebreak/components/maze/maze_game.dart';
 import 'package:coffeebreak/cosmetic/background.dart';
-import 'package:coffeebreak/dto/game/maze_game_dto.dart';
+import 'package:coffeebreak/models/game/maze_game.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -11,7 +11,7 @@ class GameScreen extends StatefulWidget {
 
 class GameScreenState extends State<GameScreen> {
   bool isLoading;
-  MazeGameDto gameDto;
+  MazeGameModel gameDto;
 
   @override
   void initState() {
@@ -66,12 +66,12 @@ class GameScreenState extends State<GameScreen> {
      isLoading = true; 
     });
 
-    MazeGameDto _game;
+    MazeGameModel _game;
     try {
       // TODO Create network download.
       String data = await DefaultAssetBundle.of(context).loadString("assets/game.json");
       final jsonResult = json.decode(data);
-      _game = MazeGameDto.fromJson(jsonResult);
+      _game = MazeGameModel.fromJson(jsonResult);
     } catch (e) {
       print(e);
     }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:coffeebreak/cosmetic/text/white_subtitle.dart';
 import 'package:coffeebreak/cosmetic/text/white_title.dart';
-import 'package:coffeebreak/dto/next_game.dart';
+import 'package:coffeebreak/models/next_game.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,7 +21,7 @@ class PlayWidget extends StatefulWidget {
 class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMixin {
   bool isLoading;
   int statusCode;
-  NextGame nextGame;
+  NextGameModel nextGame;
 
   @override
   bool get wantKeepAlive => true;
@@ -162,8 +162,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
       isLoading = true;
     });
     
-    
-    NextGame _nextGame;
+    NextGameModel _nextGame;
     int _statusCode;
 
     try {
@@ -172,7 +171,7 @@ class _PlayWidgetState extends State<PlayWidget> with AutomaticKeepAliveClientMi
       
       _statusCode = response.statusCode;
       if (response.statusCode == 200) {
-        _nextGame = NextGame.fromJson(json.decode(response.body));
+        _nextGame = NextGameModel.fromJson(json.decode(response.body));
       }
     } catch (e) {
       _statusCode = 500;
