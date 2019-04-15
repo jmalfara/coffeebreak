@@ -1,9 +1,15 @@
 import 'package:box2d_flame/box2d.dart';
 
 class SimpleContactListener extends ContactListener {
+  final Function collision;
+
+  SimpleContactListener({this.collision});
+
   @override
   void beginContact(Contact contact) {
-    print(contact.fixtureB.getBody().userData);
+    if (collision != null) {
+      collision(contact);
+    }
   }
 
   @override

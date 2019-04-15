@@ -1,4 +1,5 @@
 import 'package:box2d_flame/box2d.dart';
+import 'package:coffeebreak/game/components/types.dart';
 import 'package:flame/box2d/box2d_component.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/painting.dart';
@@ -6,8 +7,8 @@ import 'package:flutter/painting.dart';
 class Enemy extends BodyComponent {
   double _size = 5;
 
-  Enemy(Box2DComponent box) : super(box) {
-    _createBody();
+  Enemy(Box2DComponent box, Vector2 initialPosition) : super(box) {
+    _createBody(initialPosition);
   }
 
   @override
@@ -17,7 +18,7 @@ class Enemy extends BodyComponent {
     canvas.drawCircle(center, radius, paint);
   }
 
-  _createBody() {
+  _createBody(Vector2 initialPosition) {
     CircleShape shape = new CircleShape();
     shape.radius = _size;
 
@@ -26,9 +27,9 @@ class Enemy extends BodyComponent {
     FixtureDef fixtureDef = activeFixtureDef;
 
     final activeBodyDef = new BodyDef();
-    activeBodyDef.position = new Vector2(0, 20);
+    activeBodyDef.position = initialPosition;
     activeBodyDef.type = BodyType.KINEMATIC;
-    activeBodyDef.setUserData("Enemy");
+    activeBodyDef.setUserData(ComponentType.ENEMY);
     BodyDef bodyDef = activeBodyDef;
 
     this.body = world.createBody(bodyDef)
