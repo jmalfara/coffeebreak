@@ -5,9 +5,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/painting.dart';
 
 class Enemy extends BodyComponent {
-  double _size = 5;
+  double size;
 
-  Enemy(Box2DComponent box, Vector2 initialPosition) : super(box) {
+  Enemy(Box2DComponent box, Vector2 initialPosition, {this.size = 5}) : super(box) {
     _createBody(initialPosition);
   }
 
@@ -20,7 +20,7 @@ class Enemy extends BodyComponent {
 
   _createBody(Vector2 initialPosition) {
     CircleShape shape = new CircleShape();
-    shape.radius = _size;
+    shape.radius = size;
 
     final activeFixtureDef = new FixtureDef();
     activeFixtureDef.shape = shape;

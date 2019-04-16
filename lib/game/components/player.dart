@@ -5,10 +5,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/painting.dart';
 
 class Player extends BodyComponent {
-  double _size = 5;
+  double size;
   Paint paint;
 
-  Player(Box2DComponent box, Vector2 initialPosition) : super(box) {
+  Player(Box2DComponent box, Vector2 initialPosition, {this.size = 5}) : super(box) {
     _createBody(initialPosition);
     paint = new Paint();
     paint.color = Color.fromARGB(255, 0, 0, 200);
@@ -21,7 +21,7 @@ class Player extends BodyComponent {
 
   _createBody(Vector2 initialPostion) {
     CircleShape shape = new CircleShape();
-    shape.radius = _size;
+    shape.radius = size;
 
     final activeFixtureDef = new FixtureDef();
     activeFixtureDef.shape = shape;

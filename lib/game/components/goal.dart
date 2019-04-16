@@ -7,10 +7,10 @@ import 'package:flame/box2d/box2d_component.dart';
 // import 'package:flutter/painting.dart';
 
 class Goal extends BodyComponent {
-  double _size = 5;
+  double size;
   Paint paint;
 
-  Goal(Box2DComponent box, Vector2 position) : super(box) {
+  Goal(Box2DComponent box, Vector2 position, {this.size = 5}) : super(box) {
     _createBody(position);
     paint = new Paint();
     paint.color = Color.fromARGB(255, 0, 255, 0);
@@ -23,7 +23,7 @@ class Goal extends BodyComponent {
 
   _createBody(Vector2 position) {
     PolygonShape shape = new PolygonShape();
-    shape.setAsBoxXY(_size, _size);
+    shape.setAsBoxXY(size, size);
 
     final activeFixtureDef = new FixtureDef();
     activeFixtureDef.shape = shape;

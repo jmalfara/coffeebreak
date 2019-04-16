@@ -19,7 +19,12 @@ class MazeWorld extends Box2DComponent {
   bool resetWorld = false;
 
   MazeWorld({this.gameDto}) : super(scale: 1.0) {
-    grid = new Grid(width: viewport.width, height: viewport.height, box2dComponent: this);
+    grid = new Grid(
+      width: viewport.width, 
+      height: viewport.height, 
+      box2dComponent: this,
+      bounds: gameDto.baseGame.bounds
+    );
     buildGame();
   }
 
@@ -35,7 +40,8 @@ class MazeWorld extends Box2DComponent {
   }
 
   void movePlayer(Vector2 force) {
-    force.multiply(new Vector2(100, 100));
+    double speed = grid.scaledConstant() * 100;
+    force.multiply(new Vector2(speed, speed));
     player.body.linearVelocity = force;
   }
 
@@ -43,7 +49,6 @@ class MazeWorld extends Box2DComponent {
     if ((contact.fixtureA.getBody().userData == ComponentType.PLAYER && contact.fixtureB.getBody().userData == ComponentType.ENEMY) || 
         (contact.fixtureA.getBody().userData == ComponentType.ENEMY && contact.fixtureB.getBody().userData == ComponentType.PLAYER)) {
         print("Collision Player -> Enemy");
-        player.paint.color = Color.fromARGB(255, 255, 255, 255);
         resetWorld = true;
     }
   }
@@ -58,7 +63,6 @@ class MazeWorld extends Box2DComponent {
       }
       
       while(components.isNotEmpty) {
-        print("Removing Object");
         components.removeLast();
       }
 
@@ -68,9 +72,11 @@ class MazeWorld extends Box2DComponent {
   }
 
   void buildGame() {
+    addAll(grid.createBarrierBounds());
+
     // TODO Eventually parse via JSON
     // Player
-    player = grid.createPlayerAt(0, 0);
+    player = grid.createPlayerAt(gameDto.baseGame.player.location.x, gameDto.baseGame.player.location.y);
     add(player);
 
     // Enemy

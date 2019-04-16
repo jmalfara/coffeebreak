@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:box2d_flame/box2d.dart';
 import 'package:coffeebreak/game/components/types.dart';
 import 'package:flame/box2d/box2d_component.dart';
@@ -5,15 +7,15 @@ import 'package:flame/box2d/box2d_component.dart';
 // import 'package:flutter/painting.dart';
 
 class Barrier extends BodyComponent {
-  double _size = 5;
+  double sizeX, sizeY;
 
-  Barrier(Box2DComponent box, Vector2 position) : super(box) {
+  Barrier(Box2DComponent box, Vector2 position, {this.sizeX = 5, this.sizeY = 5}) : super(box) {
     _createBody(position);
   }
 
   _createBody(Vector2 position) {
     PolygonShape shape = new PolygonShape();
-    shape.setAsBoxXY(_size, _size);
+    shape.setAsBoxXY(sizeX, sizeY);
 
     final activeFixtureDef = new FixtureDef();
     activeFixtureDef.shape = shape;
