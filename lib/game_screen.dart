@@ -1,5 +1,6 @@
 import 'package:coffeebreak/components/maze/maze_game.dart';
 import 'package:coffeebreak/cosmetic/background.dart';
+import 'package:coffeebreak/models/game/base_game.dart';
 import 'package:coffeebreak/models/game/maze_game.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -11,7 +12,7 @@ class GameScreen extends StatefulWidget {
 
 class GameScreenState extends State<GameScreen> {
   bool isLoading;
-  MazeGameModel gameDto;
+  var gameDto;
 
   @override
   void initState() {
@@ -55,9 +56,11 @@ class GameScreenState extends State<GameScreen> {
   }
 
   renderGame() {
-    return MazeGame(
-      gameDto: gameDto,
-    );
+    if (gameDto is MazeGameModel) {
+      return MazeGame(gameDto: gameDto);
+    }
+
+    return Text("Unsupported Game");
   }
 
   _downloadGame() async {
@@ -65,13 +68,22 @@ class GameScreenState extends State<GameScreen> {
     setState(() {
      isLoading = true; 
     });
-
+    
     MazeGameModel _game;
     try {
       // TODO Create network download.
       String data = await DefaultAssetBundle.of(context).loadString("assets/game.json");
       final jsonResult = json.decode(data);
-      _game = MazeGameModel.fromJson(jsonResult);
+      // Must parse json twice. Once for the game type and second for the the full game details
+      BaseGameModel baseGameModel = BaseGameModel.fromJson(jsonResult["base"]);
+      switch(baseGameModel.type) {
+        case GameType.maze:
+          _game = MazeGameModel.fromJson(jsonResult);
+          break;
+        default:
+          print("Game not supported.");
+          // TODO Handle error case for unsupported game
+      }
     } catch (e) {
       print(e);
     }

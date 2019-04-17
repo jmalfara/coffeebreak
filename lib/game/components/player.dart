@@ -30,7 +30,7 @@ class Player extends BodyComponent {
     final activeBodyDef = new BodyDef();
     activeBodyDef.position = initialPostion;
     activeBodyDef.type = BodyType.DYNAMIC;
-    activeBodyDef.setUserData(ComponentType.PLAYER);
+    activeBodyDef.setUserData(ComponentType.player);
     BodyDef bodyDef = activeBodyDef;
 
     this.body = world.createBody(bodyDef)

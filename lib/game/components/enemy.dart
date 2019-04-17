@@ -29,7 +29,7 @@ class Enemy extends BodyComponent {
     final activeBodyDef = new BodyDef();
     activeBodyDef.position = initialPosition;
     activeBodyDef.type = BodyType.KINEMATIC;
-    activeBodyDef.setUserData(ComponentType.ENEMY);
+    activeBodyDef.setUserData(ComponentType.enemy);
     BodyDef bodyDef = activeBodyDef;
 
     this.body = world.createBody(bodyDef)

@@ -24,7 +24,7 @@ class Barrier extends BodyComponent {
     final activeBodyDef = new BodyDef();
     activeBodyDef.position = position;
     activeBodyDef.type = BodyType.STATIC;
-    activeBodyDef.setUserData(ComponentType.BARRIER);
+    activeBodyDef.setUserData(ComponentType.barrier);
     BodyDef bodyDef = activeBodyDef;
 
     this.body = world.createBody(bodyDef)

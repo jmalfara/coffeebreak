@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:box2d_flame/box2d.dart';
 import 'package:coffeebreak/game/components/types.dart';
 import 'package:flame/box2d/box2d_component.dart';
-// import 'package:flutter/gestures.dart';
-// import 'package:flutter/painting.dart';
 
 class Goal extends BodyComponent {
   double size;
@@ -32,7 +30,7 @@ class Goal extends BodyComponent {
     final activeBodyDef = new BodyDef();
     activeBodyDef.position = position;
     activeBodyDef.type = BodyType.STATIC;
-    activeBodyDef.setUserData(ComponentType.ENDPOINT);
+    activeBodyDef.setUserData(ComponentType.goal);
     BodyDef bodyDef = activeBodyDef;
 
     this.body = world.createBody(bodyDef)
